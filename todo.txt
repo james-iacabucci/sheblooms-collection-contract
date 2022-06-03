@@ -1,0 +1,25 @@
+staking
+- add unstake all (backup plan)
+- allow admin to unstake for someone (backup plan)
+- get earnings info for address (all the items staked in one call)
+- pause/resume staking 
+- change staking parameters
+- mulitvalut so we can add new staking programs or additional collections 
+- earn BLOOMS just for owning
+- keep track of claimed and subtract from earnings on next claim
+- when contracts are compiled, copy ABI to minitng app config folder
+
+
+Running Things
+- truffle dashboard
+- connect wallet
+- yarn deploy --network truffle
+- accept transaction in truffle dashboard
+- yarn verify <contract address> --network truffle 
+- yarn open-whitelist --network truffle
+- update contract address and abi in DAPP 
+- resume minting
+
+- copy freelist.js and goldlist.js to DAPP
+- copy /artifacts/contracts/SheBloomsCollection.sol/SheBloomsCollection.json to DAPP/src/config
+- update DAPP collecdtionConfig with NFT Contract Address
