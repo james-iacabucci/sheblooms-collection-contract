@@ -11,6 +11,13 @@ async function main() {
     await (await contract.setPaused(true)).wait();
   }
 
+  // Disable PreSale  (if needed)
+  if (await contract.preSaleMintEnabled()) {
+    console.log('Disabling Pre Sale...');
+
+    await (await contract.setPreSaleMintEnabled(false)).wait();
+  }
+
   console.log('Pre-sale is now closed!');
 }
 

@@ -20,7 +20,14 @@ async function main() {
 
     await (await contract.setMaxMintAmountPerTx(CollectionConfig.preSale.maxMintAmountPerTx)).wait();
   }
-  
+
+    // Enable Pre Sale  (if needed)
+  if (!await contract.preSaleMintEnabled()) {
+    console.log('Enabling Pre Sale...');
+
+    await (await contract.setPreSaleMintEnabled(true)).wait();
+  }
+
   // Unpause the contract (if needed)
   if (await contract.paused()) {
     console.log('Unpausing the contract...');
