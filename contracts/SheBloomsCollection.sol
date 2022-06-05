@@ -52,6 +52,7 @@ contract SheBloomsCollection is ERC721A, Ownable, ReentrancyGuard {
 
     bool public paused = true;
     bool public revealed = false;
+    bool public released = false;
     bool public freeListMintEnabled = false;
     bool public goldListMintEnabled = false;
     bool public preSaleMintEnabled = false;
@@ -184,6 +185,10 @@ contract SheBloomsCollection is ERC721A, Ownable, ReentrancyGuard {
 
     function setPaused(bool _state) public onlyOwner {
         paused = _state;
+    }
+
+    function setReleased(bool _state) public onlyOwner {
+        released = _state;
     }
 
     function setFreeListMerkleRoot(bytes32 _merkleRoot) public onlyOwner {
