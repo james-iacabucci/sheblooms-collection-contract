@@ -3,6 +3,7 @@ import MarketplaceConfigInterface from '../lib/MarketplaceConfigInterface';
 
 interface SaleConfig {
   price: number;
+  mintLimit: number;
   maxMintAmountPerTx: number;
 };
 

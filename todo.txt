@@ -15,6 +15,7 @@ Running Things
 - connect wallet
 - yarn deploy --network truffle
 - accept transaction in truffle dashboard
+- update CollectionConfig contract address
 - yarn verify <contract address> --network truffle 
 - yarn open-whitelist --network truffle
 - update contract address and abi in DAPP 

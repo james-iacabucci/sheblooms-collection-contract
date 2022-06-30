@@ -48,6 +48,7 @@ contract SheBloomsCollection is ERC721A, Ownable, ReentrancyGuard {
 
     uint256 public cost;
     uint256 public maxSupply;
+    uint256 public mintLimit;
     uint256 public maxMintAmountPerTx;
 
     bool public paused = true;
@@ -67,13 +68,15 @@ contract SheBloomsCollection is ERC721A, Ownable, ReentrancyGuard {
     ) ERC721A(_tokenName, _tokenSymbol) {
         setCost(_cost);
         maxSupply = _maxSupply;
+        mintLimit = _maxSupply;
         setMaxMintAmountPerTx(_maxMintAmountPerTx);
         setHiddenMetadataUri(_hiddenMetadataUri);
     }
 
     modifier mintCompliance(uint256 _mintAmount) {
+        uint256 newSupply = totalSupply() + _mintAmount;
         require(_mintAmount > 0 && _mintAmount <= maxMintAmountPerTx, "You can not mint this many items");
-        require(totalSupply() + _mintAmount <= maxSupply, "Max supply has been exceeded");
+        require(newSupply <= maxSupply && newSupply <= mintLimit, "This purchase exeeds the maximum number of NFTS allowed for this sale");
         _;
     }
 
@@ -165,6 +168,10 @@ contract SheBloomsCollection is ERC721A, Ownable, ReentrancyGuard {
 
     function setCost(uint256 _cost) public onlyOwner {
         cost = _cost;
+    }
+
+    function setMintLimit(uint256 _mintLimit) public onlyOwner {
+        mintLimit = _mintLimit;
     }
 
     function setMaxMintAmountPerTx(uint256 _maxMintAmountPerTx) public onlyOwner {
