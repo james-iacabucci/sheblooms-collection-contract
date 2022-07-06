@@ -10,21 +10,24 @@ async function main() {
   const publicSalePrice = utils.parseEther(CollectionConfig.publicSale.price.toString());
   if (!await (await contract.cost()).eq(publicSalePrice)) {
     console.log(`Updating the token price to ${CollectionConfig.publicSale.price} ETH...`);
-
     await (await contract.setCost(publicSalePrice)).wait();
   }
 
   // Update max amount per TX (if needed)
   if (!await (await contract.maxMintAmountPerTx()).eq(CollectionConfig.publicSale.maxMintAmountPerTx)) {
     console.log(`Updating the max mint amount per TX to ${CollectionConfig.publicSale.maxMintAmountPerTx}...`);
-
     await (await contract.setMaxMintAmountPerTx(CollectionConfig.publicSale.maxMintAmountPerTx)).wait();
+  }
+  
+  // Update mintLimit  (if needed)
+  if (!await (await contract.mintLimit()).eq(CollectionConfig.publicSale.mintLimit)) {
+    console.log(`Updating the mint limit to ${CollectionConfig.publicSale.mintLimit}...`);
+    await (await contract.setMintLimit(CollectionConfig.publicSale.mintLimit)).wait();
   }
   
   // Unpause the contract (if needed)
   if (await contract.paused()) {
     console.log('Unpausing the contract...');
-
     await (await contract.setPaused(false)).wait();
   }
 

@@ -76,7 +76,7 @@ contract SheBloomsCollection is ERC721A, Ownable, ReentrancyGuard {
     modifier mintCompliance(uint256 _mintAmount) {
         uint256 newSupply = totalSupply() + _mintAmount;
         require(_mintAmount > 0 && _mintAmount <= maxMintAmountPerTx, "You can not mint this many items");
-        require(newSupply <= maxSupply && newSupply <= mintLimit, "This purchase exeeds the maximum number of NFTS allowed for this sale");
+        require(newSupply <= maxSupply && newSupply <= mintLimit, "This purchase exceeds the maximum number of NFTS allowed for this sale");
         _;
     }
 

@@ -22,28 +22,30 @@ async function main() {
   const freelistPrice = utils.parseEther(CollectionConfig.freelistSale.price.toString());
   if (!await (await contract.cost()).eq(freelistPrice)) {
     console.log(`Updating the token price to ${CollectionConfig.freelistSale.price} ETH...`);
-
     await (await contract.setCost(freelistPrice)).wait();
   }
 
   // Update max amount per TX (if needed)
   if (!await (await contract.maxMintAmountPerTx()).eq(CollectionConfig.freelistSale.maxMintAmountPerTx)) {
     console.log(`Updating the max mint amount per TX to ${CollectionConfig.freelistSale.maxMintAmountPerTx}...`);
-
     await (await contract.setMaxMintAmountPerTx(CollectionConfig.freelistSale.maxMintAmountPerTx)).wait();
+  }
+
+  // Update mintLimit  (if needed)
+  if (!await (await contract.mintLimit()).eq(CollectionConfig.freelistSale.mintLimit)) {
+    console.log(`Updating the mint limit to ${CollectionConfig.freelistSale.mintLimit}...`);
+    await (await contract.setMintLimit(CollectionConfig.freelistSale.mintLimit)).wait();
   }
 
   // Update root hash (if changed)
   if ((await contract.freeListMerkleRoot()) !== rootHash) {
     console.log(`Updating the Free List root hash to: ${rootHash}`);
-
     await (await contract.setFreeListMerkleRoot(rootHash)).wait();
   }
   
   // Enable Free List sale (if needed)
   if (!await contract.freeListMintEnabled()) {
     console.log('Enabling Free List sale...');
-
     await (await contract.setFreeListMintEnabled(true)).wait();
   }
 

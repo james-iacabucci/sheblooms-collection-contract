@@ -17,21 +17,24 @@ async function main() {
   // Update max amount per TX (if needed)
   if (!await (await contract.maxMintAmountPerTx()).eq(CollectionConfig.preSale.maxMintAmountPerTx)) {
     console.log(`Updating the max mint amount per TX to ${CollectionConfig.preSale.maxMintAmountPerTx}...`);
-
     await (await contract.setMaxMintAmountPerTx(CollectionConfig.preSale.maxMintAmountPerTx)).wait();
   }
 
+  // Update mintLimit  (if needed)
+  if (!await (await contract.mintLimit()).eq(CollectionConfig.preSale.mintLimit)) {
+    console.log(`Updating the mint limit to ${CollectionConfig.preSale.mintLimit}...`);
+    await (await contract.setMintLimit(CollectionConfig.preSale.mintLimit)).wait();
+  }
+  
     // Enable Pre Sale  (if needed)
   if (!await contract.preSaleMintEnabled()) {
     console.log('Enabling Pre Sale...');
-
     await (await contract.setPreSaleMintEnabled(true)).wait();
   }
 
   // Unpause the contract (if needed)
   if (await contract.paused()) {
     console.log('Unpausing the contract...');
-
     await (await contract.setPaused(false)).wait();
   }
 

@@ -22,28 +22,30 @@ async function main() {
   const goldlistPrice = utils.parseEther(CollectionConfig.goldlistSale.price.toString());
   if (!await (await contract.cost()).eq(goldlistPrice)) {
     console.log(`Updating the token price to ${CollectionConfig.goldlistSale.price} ETH...`);
-
     await (await contract.setCost(goldlistPrice)).wait();
   }
 
   // Update max amount per TX (if needed)
   if (!await (await contract.maxMintAmountPerTx()).eq(CollectionConfig.goldlistSale.maxMintAmountPerTx)) {
     console.log(`Updating the max mint amount per TX to ${CollectionConfig.goldlistSale.maxMintAmountPerTx}...`);
-
     await (await contract.setMaxMintAmountPerTx(CollectionConfig.goldlistSale.maxMintAmountPerTx)).wait();
+  }
+
+  // Update mintLimit  (if needed)
+  if (!await (await contract.mintLimit()).eq(CollectionConfig.goldlistSale.mintLimit)) {
+    console.log(`Updating the mint limit to ${CollectionConfig.goldlistSale.mintLimit}...`);
+    await (await contract.setMintLimit(CollectionConfig.goldlistSale.mintLimit)).wait();
   }
 
   // Update root hash (if changed)
   if ((await contract.goldListMerkleRoot()) !== rootHash) {
     console.log(`Updating the Gold List root hash to: ${rootHash}`);
-
     await (await contract.setGoldListMerkleRoot(rootHash)).wait();
   }
   
   // Enable Gold List sale (if needed)
   if (!await contract.goldListMintEnabled()) {
     console.log('Enabling Gold List sale...');
-
     await (await contract.setGoldListMintEnabled(true)).wait();
   }
 
