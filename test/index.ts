@@ -63,27 +63,32 @@ describe(CollectionConfig.contractName, function () {
 
   it('Check initial data', async function () {
     expect(await contract.name()).to.equal(CollectionConfig.tokenName);
-    expect(await contract.symbol()).to.equal(CollectionConfig.tokenSymbol);
-    expect(await contract.cost()).to.equal(getPrice(SaleType.GOLDLIST, 1));
-    expect(await contract.maxSupply()).to.equal(CollectionConfig.maxSupply);
-    expect(await contract.maxMintAmountPerTx()).to.equal(CollectionConfig.goldlistSale.maxMintAmountPerTx);
-    expect(await contract.hiddenMetadataUri()).to.equal(CollectionConfig.hiddenMetadataUri);
+    expect(await contract.symbol()).to.equal(CollectionConfig.tokenSymbol);    
 
     expect(await contract.paused()).to.equal(true);
+    expect(await contract.revealed()).to.equal(false); 
+    expect(await contract.released()).to.equal(false);
+    
+    expect(await contract.freeListMintEnabled()).to.equal(false);
     expect(await contract.goldListMintEnabled()).to.equal(false);
-    expect(await contract.revealed()).to.equal(false);
+    expect(await contract.preSaleMintEnabled()).to.equal(false);
+
+    expect(await contract.maxSupply()).to.equal(CollectionConfig.maxSupply);
+    expect(await contract.hiddenMetadataUri()).to.equal(CollectionConfig.hiddenMetadataUri);
+    expect(await contract.cost()).to.equal(getPrice(SaleType.PUBLIC_SALE, 1));
+    expect(await contract.maxMintAmountPerTx()).to.equal(CollectionConfig.publicSale.maxMintAmountPerTx);
 
     await expect(contract.tokenURI(1)).to.be.revertedWith('ERC721Metadata: the token specified does not exist');
   });
 
   it('Before any sale', async function () {
     // Nobody should be able to mint from a paused contract
-    await expect(contract.connect(goldListedUser).mint(1, {value: getPrice(SaleType.GOLDLIST, 1)})).to.be.revertedWith('The sale is paused!');
-    await expect(contract.connect(goldListedUser).goldListMint(1, [], {value: getPrice(SaleType.GOLDLIST, 1)})).to.be.revertedWith('The Gold List sale is not active!');
-    await expect(contract.connect(holder).mint(1, {value: getPrice(SaleType.GOLDLIST, 1)})).to.be.revertedWith('The sale is paused!');
-    await expect(contract.connect(holder).goldListMint(1, [], {value: getPrice(SaleType.GOLDLIST, 1)})).to.be.revertedWith('The Gold List sale is not active!');
-    await expect(contract.connect(owner).mint(1, {value: getPrice(SaleType.GOLDLIST, 1)})).to.be.revertedWith('The sale is paused!');
-    await expect(contract.connect(owner).goldListMint(1, [], {value: getPrice(SaleType.GOLDLIST, 1)})).to.be.revertedWith('The Gold List sale is not active!');
+    await expect(contract.connect(goldListedUser).mint(1, {value: getPrice(SaleType.PUBLIC_SALE, 1)})).to.be.revertedWith('The sale is paused!');
+    await expect(contract.connect(goldListedUser).goldListMint(1, [], {value: getPrice(SaleType.PUBLIC_SALE, 1)})).to.be.revertedWith('The Gold List sale is not active!');
+    await expect(contract.connect(holder).mint(1, {value: getPrice(SaleType.PUBLIC_SALE, 1)})).to.be.revertedWith('The sale is paused!');
+    await expect(contract.connect(holder).goldListMint(1, [], {value: getPrice(SaleType.PUBLIC_SALE, 1)})).to.be.revertedWith('The Gold List sale is not active!');
+    await expect(contract.connect(owner).mint(1, {value: getPrice(SaleType.PUBLIC_SALE, 1)})).to.be.revertedWith('The sale is paused!');
+    await expect(contract.connect(owner).goldListMint(1, [], {value: getPrice(SaleType.PUBLIC_SALE, 1)})).to.be.revertedWith('The Gold List sale is not active!');
 
     // The owner should always be able to run mintForAddress
     await (await contract.mintForAddress(1, await owner.getAddress())).wait();
@@ -109,6 +114,9 @@ describe(CollectionConfig.contractName, function () {
     // Update the root hash
     await (await contract.setGoldListMerkleRoot('0x' + rootHash.toString('hex'))).wait();
 
+    await contract.setCost(utils.parseEther(CollectionConfig.goldlistSale.price.toString()));
+    await contract.setMaxMintAmountPerTx(CollectionConfig.goldlistSale.maxMintAmountPerTx);
+    await contract.setMintLimit(CollectionConfig.goldlistSale.mintLimit);
     await contract.setGoldListMintEnabled(true);
 
     await contract.connect(goldListedUser).goldListMint(
@@ -153,7 +161,7 @@ describe(CollectionConfig.contractName, function () {
       {value: getPrice(SaleType.GOLDLIST, 1)},
     )).to.be.revertedWith('This is an invalid Gold List proof!');
     
-    // Pause whitelist sale
+    // Pause goldList sale
     await contract.setGoldListMintEnabled(false);
     await contract.setCost(utils.parseEther(CollectionConfig.preSale.price.toString()));
 

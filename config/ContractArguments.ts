@@ -5,9 +5,9 @@ import CollectionConfig from './CollectionConfig';
 const ContractArguments = [
   CollectionConfig.tokenName,
   CollectionConfig.tokenSymbol,
-  utils.parseEther(CollectionConfig.goldlistSale.price.toString()),
+  utils.parseEther(CollectionConfig.publicSale.price.toString()),
   CollectionConfig.maxSupply,
-  CollectionConfig.goldlistSale.maxMintAmountPerTx,
+  CollectionConfig.publicSale.maxMintAmountPerTx,
   CollectionConfig.hiddenMetadataUri,
 ] as const;
 
